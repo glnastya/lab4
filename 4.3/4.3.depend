@@ -1,0 +1,31 @@
+# depslib dependency file v1.0
+1450719666 source:d:\univer\c++\lr4\lab4.3\4.13\4.3\4.1.cpp
+	"sdt.h"
+
+1444314918 d:\univer\c++\lr4\lab4.3\4.13\4.3\sdt.h
+	<iostream>
+	<iomanip>
+	<fstream>
+	<sstream>
+	<cmath>
+	<cstdlib>
+	<string>
+	<list>
+	<forward_list>
+	<vector>
+	<map>
+	<unordered_map>
+	<algorithm>
+	<array>
+	<regex>
+	<random>
+	<stdexcept>
+
+1450720081 source:d:\univer\c++\lr4\lab4.3\4.13\4.3\4.3.cpp
+	"sdt.h"
+	"print.h"
+
+1450719725 d:\univer\c++\lr4\lab4.3\4.13\4.3\print.h.h
+
+1450623766 d:\univer\c++\lr4\lab4.3\4.13\4.3\print.h
+
