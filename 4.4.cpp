@@ -1,54 +1,54 @@
 #include "sdt.h"
 //функция для пункта 4.2
-bool err = true;
-void proverka(char* name)
+
+int proverka(char* name)
 {
     //проверка на символы *,",<,>,?,|
-   if (strpbrk(name,"*<>?|\"")!= 0) //strpbrk - cканирует строку name на присутствие символов из второй строки
+    if (strpbrk(name,"*<>?|\"")!= 0) //strpbrk - cканирует строку name на присутствие символов из второй строки
     {
         cout <<"Unknown symbol (*<>?|\""<<endl;
-        err=true;
+        return 1;
     }
-    if (strchr(name,':')!=0) //strchr - ищет первое появление c (преобразованного в char) в строке
-    {
-        if (strchr(name,':')!=&name[1])
-        {
-            cout<<"Wrong applying the symbol : "<<endl;
-            err=true;
-        }
-        else
+    //проверка на :
+    if (strpbrk(name,":") != 0) //сканирует на наличие :
+        if (strchr(name, ':') == &name[1] && strrchr(name, ':') == &name[1])
         {
             if(!isalpha(name[0]))
             {
                 cout <<"Before : not a letter"<<endl;
-                err=true;
+                return 1;
             }
             if(name[2]!= '\\')
             {
                 cout <<"After : not \\"<<endl;
-                err=true;
+                return 1;
             }
         }
-    }
+        else
+        {
+            cout<<"Wrong applying the symbol : "<<endl;
+            return 1;
+        }
 //проверка на расширение
-strrev(name); //strrev(char *s) - переписывает символы в строке в обратном порядке
-if ( strncmp(name, "txt.", 4 ) != 0 && strncmp( name, "TXT.", 4 ) != 0) //strncmp-сравнивает строки
-{
-    cout<<"Wrong format! (.txt or .TXT)"<<endl;
-    err=true;
-}
-strrev(name);
+    strrev(name); //strrev(char *s) - переписывает символы в строке в обратном порядке
+    if ( strncmp(name, "txt.", 4 ) != 0 && strncmp( name, "TXT.", 4 ) != 0) //strncmp-сравнивает строки
+    {
+        cout<<"Wrong format! (.txt or .TXT)"<<endl;
+        return 1;
+    }
+    strrev(name);
+    return 0;
 }
 
 int main()
 {
     char file_name[20];
-    while (err)
+    int p = 1;
+    while (p)
     {
-    err=false;
-    cout <<"Enter a file name with text (.txt):  ";
-    cin >>file_name;
-    proverka(file_name);
+        cout <<"Enter a file name with text (.txt):  ";
+        cin >>file_name;
+        p = proverka(file_name);
     }
     //пункт 4.3: загрузить сожержимое файла
     FILE * file = fopen(file_name, "a+"); //доступ к файлу
@@ -68,7 +68,7 @@ int main()
     //пункт 4.4: ввести искомую строку в тексте
     cout <<"\nEnter a search string:  ";
     char str[20];
-    cin >>str;
+    cin >> str;
 
     //пункт 4.5: найти введенную строку (реализация стандартной функции)
     char *cp = (char *) mass;
@@ -84,30 +84,30 @@ int main()
         cp++;
     }
     //пункт 4.6: разбить файл на предложения, поместив их в char**
-    int * pred=new int [20];
+    int * pred = new int [20];
     int n=0;
     pred[0]=-1;
-for(int i=0; i<size_; ++i)
-            if(mass[i] == '.' || mass[i] == '?' || mass[i] == '!')
-            {
-                ++n;
-                pred[n]=i;
-            }
+    for(int i=0; i<size_; ++i)
+        if(mass[i] == '.' || mass[i] == '?' || mass[i] == '!')
+        {
+            ++n;
+            pred[n]=i;
+        }
     cout <<"\nThe number of proposals: "<<n<<endl;
     char ** massPred=new char*[n];
-        for(int i=0; i<n; ++i)
-        {
-            fseek(file, pred[i]+1,SEEK_SET);
-            char *mass1 = new char[pred[i+1]]; //выделение памяти
-            fread(mass1,sizeof(char),pred[i+1],file);
-            char *mass2 = new char[pred[i+1]];
-            massPred[i]= strncpy(mass2, mass1, (pred[i+1]-pred[i])*sizeof(char));
-            delete [] mass1; //освобождение выделенной памяти
-        }
-        fclose (file);
-        cout<<endl;
-        for(int i=0; i<n; ++i)
-           cout<<"("<<strlen(massPred[i])<<") : "<<massPred[i]<<endl;;
+    for(int i=0; i<n; ++i)
+    {
+        fseek(file, pred[i]+1,SEEK_SET);
+        char *mass1 = new char[pred[i+1]]; //выделение памяти
+        fread(mass1,sizeof(char),pred[i+1],file);
+        char *mass2 = new char[pred[i+1]];
+        massPred[i]= strncpy(mass2, mass1, (pred[i+1]-pred[i])*sizeof(char));
+        delete [] mass1;
+    }
+    fclose (file);
+    cout<<endl;
+    for(int i=0; i<n; ++i)
+        cout<<"("<<strlen(massPred[i])<<") : "<<massPred[i]<<endl;;
     //пункт 4.7: упорядочить предложения по возрастанию
     for (int i = 0; i < n - 1; i++)
     {
@@ -119,31 +119,34 @@ for(int i=0; i<size_; ++i)
     }
     cout<<"\nSorting proposal:\n";
     for(int i=0; i<n; ++i)
-           cout<<strlen(massPred[i])<<") : "<<massPred[i]<<endl;
+        cout<<strlen(massPred[i])<<") : "<<massPred[i]<<endl;
 
     //пункт 4.8: записать предложения в новый файл
     char file2_name[20];
-    err=true;
-    while (err)
+    p = 1;
+    while (p)
     {
-        err=false;
         cout << "\nEnter a new file name for the record (.txt)\n";
         cin >> file2_name;
-        proverka(file2_name);
+        p = proverka(file2_name);
         cout <<endl;
     }
     FILE * file2 = fopen(file2_name, "a+");
     fseek(file2,0,SEEK_SET);  //положение в начало файла
     for(int i=0; i<n; ++i)
         fputs(massPred[i], file2);
-        fclose (file2);
+    fclose (file2);
 
     //пункт 4.9: освободить все выделенные блоки памяти
     for(int i=0; i<n; ++i)
     {
-       delete[] massPred;
+        delete[] massPred[i];
     }
-    delete [] mass, pred, cp, massPred;
-    delete s1, s2;
+    delete [] mass;
+    delete [] pred;
+    delete [] cp;
+    delete [] massPred;
+    delete s1;
+    delete s2;
 }
 

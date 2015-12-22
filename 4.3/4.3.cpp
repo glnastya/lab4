@@ -5,7 +5,7 @@ struct Student
 {
     char Name[6];
     short Year;
-    short MeanScore;
+    float MeanScore;
     short Gender: 1;
     short Course;
     Student* Starosta;
@@ -16,7 +16,7 @@ int main()
     Student stud[3]=
     {
         {"Arina", 2013, 5, 0, 2, nullptr},
-        {"Dima", 2013, 4, 1, 2, &stud[0]},
+        {"Dima", 2013, 4.5, 1, 2, &stud[0]},
         {"Anton",2013, 3, 1, 2, &stud[0]}
     };
     //пункт 3.3
@@ -78,10 +78,14 @@ int main()
 
     //4) элементы массива в шестнадцатеричном виде
     cout <<endl;
-    cout <<"\nName\t\t  Year  MeanS Gend  Course  Starosta\n";
-    for(int i=0; i<3; ++i)
+    cout <<"\n| Name\t\t | Year|    MeanS   |Curs| Starosta\n";
+    for(int i = 0; i < 3; ++i)
     {
-        print_in_hexAll(&stud[i], sizeof(stud[i]));
-        cout <<endl;
+        print_in_hexAll(&stud[i].Name, sizeof(stud[i].Name));
+        print_in_hexAll(&stud[i].Year, sizeof(stud[i].Year));
+        print_in_hexAll(&stud[i].MeanScore, sizeof(stud[i].MeanScore));
+        print_in_hexAll(&stud[i].Course, sizeof(stud[i].Course));
+        print_in_hexAll(&stud[i].Starosta, sizeof(stud[i].Starosta));
+        cout << endl;
     }
 }
