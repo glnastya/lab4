@@ -68,13 +68,13 @@ int main()
     print_in_hexAll(&stud[1].Course, sizeof(stud[1].Course));
 
     cout <<"\n\nField Starosta:";
-    cout <<"\nAddress stud[1]: " <<stud[1].Starosta;
+    cout <<"\nAddress stud[1]: " <<&stud[1].Starosta;
     cout <<"\nOffset stud[1]: " <<offsetof(struct Student, Starosta);
     cout <<"\nSize stud[1]: " <<sizeof(stud[1].Starosta);
     cout <<"\nIn binary: ";
-    print_in_binaryAll(stud[1].Starosta, sizeof(stud[1].Starosta));
+    print_in_binaryAll(&stud[1].Starosta, sizeof(stud[1].Starosta));
     cout <<"\nIn hex: ";
-    print_in_hexAll(stud[1].Starosta, sizeof(stud[1].Starosta));
+    print_in_hexAll(&stud[1].Starosta, sizeof(stud[1].Starosta));
 
     //4) элементы массива в шестнадцатеричном виде
     cout <<endl;
